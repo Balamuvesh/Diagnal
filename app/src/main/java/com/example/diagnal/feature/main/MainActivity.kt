@@ -1,4 +1,4 @@
-package com.example.diagnal.feature
+package com.example.diagnal.feature.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
