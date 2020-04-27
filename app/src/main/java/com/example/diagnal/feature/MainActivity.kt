@@ -1,7 +1,8 @@
-package com.example.diagnal
+package com.example.diagnal.feature
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.diagnal.R
 
 class MainActivity : AppCompatActivity() {
 
