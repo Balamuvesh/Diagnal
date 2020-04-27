@@ -16,9 +16,10 @@
 
     <TextView
         android:id="@+id/tv_title_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@id/img_title_poster"
         app:layout_constraintTop_toBottomOf="@id/img_title_poster"
         app:layout_constraintStart_toStartOf="@id/img_title_poster"
         style="@style/TitleTextAppearance"
