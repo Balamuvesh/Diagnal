@@ -12,14 +12,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:contentDescription="@string/title_poster"
-        tools:src = "@drawable/placeholder_for_missing_posters"/>
+        tools:src = "@drawable/poster1"/>
 
     <TextView
         android:id="@+id/tv_title_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/img_title_poster"
         app:layout_constraintStart_toStartOf="@id/img_title_poster"
+        style="@style/TitleTextAppearance"
         tools:text="Movie Name"/>
 
 
