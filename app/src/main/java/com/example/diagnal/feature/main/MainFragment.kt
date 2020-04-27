@@ -36,10 +36,11 @@ class MainFragment: Fragment() {
     }
 
     private fun populateView() {
-        val tempMoviesList:List<Movie> = listOf(Movie("The Birds", "poster1"), Movie("The Birds", "poster1"), Movie("The Birds", "poster1"), Movie("The Birds", "poster1"), Movie("The Birds", "poster1"), Movie("The Birds", "poster1") )
-        val gridLayoutManager = GridLayoutManager(mContext,3, GridLayoutManager.HORIZONTAL, false)
+        val tempMoviesList:List<Movie> = listOf(Movie("The Birds", "poster1"), Movie("The Birds", "poster2"), Movie("The Birds", "poster3"), Movie("The Birds", "poster4"), Movie("The Birds", "poster5"), Movie("The Birds", "poster6"), Movie("The Birds", "poster7"), Movie("The Birds", "poster8"), Movie("The Birds", "poster9"), Movie("The Birds", "poster1"), Movie("The Birds", "poster2"), Movie("The Birds", "poster3"), Movie("The Birds", "poster4"), Movie("The Birds", "poster5"), Movie("The Birds", "poster6"), Movie("The Birds", "poster7"), Movie("The Birds", "poster8"), Movie("The Birds", "poster9"), Movie("The Birds", "poster1"), Movie("The Birds", "poster2"), Movie("The Birds", "poster3"), Movie("The Birds", "poster4"), Movie("The Birds", "poster5"), Movie("The Birds", "poster6"), Movie("The Birds", "poster7"), Movie("The Birds", "poster8"), Movie("The Birds", "poster9"), Movie("The Birds", "poster1"), Movie("The Birds", "poster2"), Movie("The Birds", "poster3"), Movie("The Birds", "poster4"), Movie("The Birds", "poster5"), Movie("The Birds", "poster6"), Movie("The Birds", "poster7"), Movie("The Birds", "poster8"), Movie("The Birds", "poster9") )
+        val gridLayoutManager = GridLayoutManager(mContext,3, GridLayoutManager.VERTICAL, false)
         rv_movie_list.layoutManager = gridLayoutManager
         val listAdapter = MovieAdapter(mContext, tempMoviesList)
         rv_movie_list.adapter = listAdapter
+        rv_movie_list.addItemDecoration(MarginItemDecoration(16))
     }
 }
