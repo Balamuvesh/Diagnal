@@ -31,12 +31,14 @@ class MovieAdapter(private val mContext: Context, private val movieList: List<Mo
             Glide.with(mContext)
                 .load(getImage(movie.poster_image))
                 .fitCenter()
-                .placeholder(getImage("placeholder_for_missing_posters"))
+                .placeholder(getImage("poster9"))
                 .into(itemView.img_title_poster)
         }
 
         private fun getImage(imageName: String?): Int {
-            return mContext.resources.getIdentifier(imageName, "drawable", mContext.packageName)
+            imageName?.substringBefore('.').let {
+                return mContext.resources.getIdentifier(it, "drawable", mContext.packageName)
+            }
         }
     }
 }
