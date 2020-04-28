@@ -50,7 +50,7 @@ class MarginItemDecoration(private val spaceHeight: Int) : RecyclerView.ItemDeco
         }
         left =  spaceHeight
         right = spaceHeight
-        bottom = spaceHeight*2
+        bottom = spaceHeight*3
     }
     }
 }
