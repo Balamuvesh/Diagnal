@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.diagnal.R
+import com.example.diagnal.common.ui.ViewState
 import com.example.diagnal.data.movie.Movie
 import com.example.diagnal.data.movie.MovieListResponseModel
 import kotlinx.android.synthetic.main.fragment_main.*
@@ -26,7 +27,7 @@ class MainFragment : Fragment() {
         MovieListRepository(mContext)
     }
     private val movieListViewModel by lazy {
-        ViewModelProvider(this, CustomViewModelFactory(movieListRepository)).get(MovieListViewModel::class.java)
+        ViewModelProvider(this, MovieListViewModelFactory(movieListRepository)).get(MovieListViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -39,6 +40,18 @@ class MainFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        movieListViewModel.viewState.observe(
+            viewLifecycleOwner,
+            Observer { viewState ->
+                when(viewState ?: ViewState.LOADING){
+                    ViewState.LOADING -> progress_circular.visibility = View.VISIBLE
+                    ViewState.LOADED -> progress_circular.visibility = View.GONE
+                    ViewState.ERROR -> TODO()
+                }
+            }
+        )
+
         movieListViewModel.movieListResponseModel.observe(
             viewLifecycleOwner,
             Observer<MovieListResponseModel> { movieListResponseModel ->

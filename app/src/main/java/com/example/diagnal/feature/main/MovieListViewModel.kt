@@ -18,11 +18,12 @@ class MovieListViewModel(private val movieListRepository: MovieListRepository): 
             movieListResponseModel.value = this
             viewState.value
         }
+        viewState.value = ViewState.LOADED
     }
 }
 
 @Suppress("UNCHECKED_CAST")
-class CustomViewModelFactory(private val movieListRepository: MovieListRepository) : ViewModelProvider.NewInstanceFactory() {
+class MovieListViewModelFactory(private val movieListRepository: MovieListRepository) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return MovieListViewModel(movieListRepository) as T
