@@ -26,8 +26,11 @@ class MovieListViewModel(private val movieListRepository: MovieListRepository) :
         viewState.value = ViewState.LOADED
     }
 
-    fun getMovieListPage(pageNumber: Int): MovieListResponseModel?{
-       return movieListRepository.getMovieList(pageNumber)
+    fun getMovieListPage(pageNumber: Int){
+       movieListRepository.getMovieList(pageNumber).let {
+           it?.page?.contentItems?.movieList?.let { it1 -> movieList.value?.addAll(it1) }
+       }
+        movieList.value = movieList.value
     }
 
     fun searchMovieList(query: String?) {

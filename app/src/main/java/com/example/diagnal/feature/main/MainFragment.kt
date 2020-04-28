@@ -27,11 +27,10 @@ class MainFragment : Fragment() {
     private lateinit var mContext: Context
 
     private lateinit var listAdapter: MovieAdapter
+
+
     private var currentPage: Int = 1
-    private val misLastPage = false
-    private val totalPage = 3
-    private var misLoading = false
-    var itemCount = 0
+    private val TOTAL_PAGES = 3
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -73,8 +72,16 @@ class MainFragment : Fragment() {
         movieListViewModel.movieList.observe(
             viewLifecycleOwner,
             Observer<List<Movie>> { movieList ->
+                if(movieList.isEmpty()){
+                    empty_list_placeholder.visibility = View.VISIBLE
+                    rv_movie_list.visibility = View.GONE
+                }else {
+                    empty_list_placeholder.visibility = View.GONE
+                    rv_movie_list.visibility = View.VISIBLE
+                }
                 if(movieListViewModel.isSearching)
                     listAdapter.clear()
+
                 listAdapter.addMovies(movieList)
             })
         setupViews()
@@ -91,18 +98,6 @@ class MainFragment : Fragment() {
         rv_movie_list.adapter = listAdapter
 
 
-        rv_movie_list.addOnScrollListener(object : PaginationListener(gridLayoutManager) {
-            override fun loadMoreItems() {
-                misLoading = true
-                currentPage += 1
-                doApiCall()
-            }
-
-            override val isLastPage: Boolean
-                get() = misLastPage
-            override val isLoading: Boolean
-                get() = misLoading
-        })
 
         img_search.setOnClickListener {
             img_search.visibility = View.GONE
@@ -165,41 +160,28 @@ class MainFragment : Fragment() {
             }
             false
         })
+
+        rv_movie_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0) {
+
+                    val layoutManager = rv_movie_list.layoutManager as GridLayoutManager
+                    val visibleItemCount = layoutManager.findLastCompletelyVisibleItemPosition()+1
+                    if (visibleItemCount == layoutManager.itemCount){
+                        if(currentPage < TOTAL_PAGES ) {
+                            currentPage++
+                            loadNextPage()
+                        }
+                    }
+
+
+                }
+            }
+        })
     }
 
-    private fun doApiCall() {
-        val items = mutableListOf<Movie>()
+    private fun loadNextPage() {
         movieListViewModel.getMovieListPage(currentPage)
     }
-}
-
-
-abstract class PaginationListener(private val layoutManager: GridLayoutManager) :
-    RecyclerView.OnScrollListener() {
-    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-        super.onScrolled(recyclerView, dx, dy)
-        val visibleItemCount = layoutManager.childCount
-        val totalItemCount = layoutManager.itemCount
-        val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-        if (!isLoading && !isLastPage) {
-            if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0 && totalItemCount >= PAGE_SIZE
-            ) {
-                loadMoreItems()
-            }
-        }
-    }
-
-    protected abstract fun loadMoreItems()
-    abstract val isLastPage: Boolean
-    abstract val isLoading: Boolean
-
-    companion object {
-        const val PAGE_START = 1
-
-        /**
-         * Set scrolling threshold here (for now i'm assuming 10 item in one page)
-         */
-        private const val PAGE_SIZE = 20
-    }
-
 }
