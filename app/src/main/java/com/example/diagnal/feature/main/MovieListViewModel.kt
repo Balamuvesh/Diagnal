@@ -9,7 +9,8 @@ import com.example.diagnal.data.movie.MovieListResponseModel
 
 class MovieListViewModel(private val movieListRepository: MovieListRepository) : ViewModel() {
     val viewState = MutableLiveData<ViewState>()
-    val movieListResponseModel = MutableLiveData<MovieListResponseModel>()
+    lateinit var movieListResponseModel: MovieListResponseModel
+    val movieList = MutableLiveData<List<Movie>>()
     val errorMsg = MutableLiveData<String>()
     private var initialMoviesList: List<Movie> = listOf()
 
@@ -19,32 +20,32 @@ class MovieListViewModel(private val movieListRepository: MovieListRepository) :
 
     fun getMoviesList() {
         viewState.value = ViewState.LOADING
-        movieListRepository.getMovieList().apply {
-            movieListResponseModel.value = this
+        movieListRepository.getMovieList()?.apply {
+            movieListResponseModel = this
+            movieList.value = this.page.contentItems.movieList
         }
         viewState.value = ViewState.LOADED
     }
 
     fun searchMovieList(query: String?) {
         //if query is  null, reset list to initial value
-        if (query == null)
-            movieListResponseModel.value?.page?.contentItems?.movieList = initialMoviesList
-        else
-            movieListResponseModel.value?.page?.contentItems?.movieList = initialMoviesList.filter {
+        if (query == null) {
+            movieList.value = initialMoviesList
+        }else {
+            movieList.value = initialMoviesList.filter {
                 it.name.contains(query, ignoreCase = true)
             }
-        movieListResponseModel.value = movieListResponseModel.value
+        }
     }
 
     fun setIsSearching(boolean: Boolean) {
         if (boolean) {
             if (!isSearching)
-                movieListResponseModel.value?.page?.contentItems?.movieList?.let {
+                movieList.value?.let {
                     initialMoviesList = it
                 }
         } else {
-            movieListResponseModel.value?.page?.contentItems?.movieList = initialMoviesList
-            movieListResponseModel.value = movieListResponseModel.value
+            movieList.value = initialMoviesList
         }
     }
 }

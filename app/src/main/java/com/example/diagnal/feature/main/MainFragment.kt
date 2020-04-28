@@ -61,12 +61,11 @@ class MainFragment : Fragment() {
                 }
             }
         )
-
-        movieListViewModel.movieListResponseModel.observe(
+        movieListViewModel.movieList.observe(
             viewLifecycleOwner,
-            Observer<MovieListResponseModel> { movieListResponseModel ->
-                appbar_title.text = movieListResponseModel.page.pageTitle
-                populateList(movieListResponseModel.page.contentItems.movieList)
+            Observer<List<Movie>> { movieList ->
+                appbar_title.text = movieListViewModel.movieListResponseModel.page.pageTitle
+                populateList(movieList)
             })
 
         search_view.addTextChangedListener(object: TextWatcher {
