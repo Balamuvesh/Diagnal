@@ -29,7 +29,6 @@
         android:layout_height="?attr/actionBarSize"
         android:paddingHorizontal="12dp"
         android:elevation="100dp"
-        android:background="@android:color/holo_green_light"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -44,6 +43,7 @@
             android:contentDescription="@string/back_button" />
 
         <TextView
+            android:id="@+id/appbar_title"
             style="@style/TitleTextAppearance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -57,6 +57,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/img_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -66,11 +67,15 @@
             android:contentDescription="@string/search_button"/>
 
         <EditText
+            android:id="@+id/search_view"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:drawableEnd="@drawable/ic_search_cancel"
             app:layout_constraintStart_toEndOf="@id/img_back"
+            android:layout_marginStart="12dp"
             android:hint="@string/search"
+            style="@style/TitleTextAppearance"
+            android:textSize="18sp"
             android:inputType="textCapWords"
             android:visibility="gone"
             android:importantForAutofill="no"
@@ -87,7 +92,6 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="10dp"
         android:paddingBottom="70dp"
-        android:background="@android:color/holo_blue_bright"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
