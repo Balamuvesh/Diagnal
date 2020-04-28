@@ -19,9 +19,7 @@ import com.example.diagnal.common.extensions.hideKeyboard
 import com.example.diagnal.common.extensions.showKeyboard
 import com.example.diagnal.common.ui.ViewState
 import com.example.diagnal.data.movie.Movie
-import com.example.diagnal.data.movie.MovieListResponseModel
 import kotlinx.android.synthetic.main.fragment_main.*
-import kotlinx.android.synthetic.main.item_title.*
 
 
 class MainFragment : Fragment() {
@@ -95,8 +93,10 @@ class MainFragment : Fragment() {
     }
 
     private fun setupViews() {
-
-        rv_movie_list.addItemDecoration(MarginItemDecoration(20))
+        val columns = resources.getInteger(R.integer.rv_movies_span)
+        rv_movie_list.addItemDecoration(MarginItemDecoration(columns,20))
+        val gridLayoutManager = GridLayoutManager(mContext, columns, GridLayoutManager.VERTICAL, false)
+        rv_movie_list.layoutManager = gridLayoutManager
 
 
         img_search.setOnClickListener {
@@ -136,8 +136,6 @@ class MainFragment : Fragment() {
     }
 
     private fun populateList(movieList: List<Movie>) {
-        val gridLayoutManager = GridLayoutManager(mContext, 3, GridLayoutManager.VERTICAL, false)
-        rv_movie_list.layoutManager = gridLayoutManager
         val listAdapter = MovieAdapter(mContext, movieList)
         rv_movie_list.adapter = listAdapter
     }
