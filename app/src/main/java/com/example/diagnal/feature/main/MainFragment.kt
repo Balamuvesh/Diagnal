@@ -54,6 +54,6 @@ class MainFragment : Fragment() {
         rv_movie_list.layoutManager = gridLayoutManager
         val listAdapter = MovieAdapter(mContext, movieList)
         rv_movie_list.adapter = listAdapter
-        rv_movie_list.addItemDecoration(MarginItemDecoration(16))
+        rv_movie_list.addItemDecoration(MarginItemDecoration(20))
     }
 }

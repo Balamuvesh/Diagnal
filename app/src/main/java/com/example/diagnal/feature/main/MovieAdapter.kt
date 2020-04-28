@@ -47,12 +47,16 @@ class MovieAdapter(private val mContext: Context, private val movieList: List<Mo
 class MarginItemDecoration(private val spaceHeight: Int) : RecyclerView.ItemDecoration() {
     override fun getItemOffsets(outRect: Rect, view: View,
                                 parent: RecyclerView, state: RecyclerView.State) {        with(outRect) {
-        if (parent.getChildAdapterPosition(view) == 0) {
+        val position = parent.getChildAdapterPosition(view)
+        if (position in 0..2) {
             top = spaceHeight
         }
-        left =  spaceHeight
-        right = spaceHeight
-        bottom = spaceHeight*3
+        if(position%3 == 0)
+            right = spaceHeight
+
+        if((position+1)%3 == 0)
+            left = spaceHeight
+        bottom = spaceHeight*2
     }
     }
 }
