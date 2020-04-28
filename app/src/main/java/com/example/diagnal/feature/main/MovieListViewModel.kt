@@ -10,19 +10,18 @@ import com.example.diagnal.data.movie.MovieListResponseModel
 class MovieListViewModel(private val movieListRepository: MovieListRepository) : ViewModel() {
     val viewState = MutableLiveData<ViewState>()
     lateinit var movieListResponseModel: MovieListResponseModel
-    val movieList = MutableLiveData<List<Movie>>()
-    val errorMsg = MutableLiveData<String>()
-    private var initialMoviesList: List<Movie> = listOf()
+    val movieList = MutableLiveData<MutableList<Movie>>()
+    private var initialMoviesList: MutableList<Movie> = mutableListOf()
 
     //Set this parameter to true to start searching
-    private var isSearching: Boolean = false
+    var isSearching: Boolean = false
 
 
     fun getMoviesList() {
         viewState.value = ViewState.LOADING
         movieListRepository.getMovieList(1)?.apply {
             movieListResponseModel = this
-            movieList.value = this.page.contentItems.movieList
+            movieList.value = this.page.contentItems.movieList as MutableList<Movie>
         }
         viewState.value = ViewState.LOADED
     }
@@ -38,8 +37,9 @@ class MovieListViewModel(private val movieListRepository: MovieListRepository) :
         }else {
             movieList.value = initialMoviesList.filter {
                 it.name.contains(query, ignoreCase = true)
-            }
+            } as MutableList<Movie>
         }
+        movieList.value = movieList.value
     }
 
     fun setIsSearching(boolean: Boolean) {
@@ -51,6 +51,7 @@ class MovieListViewModel(private val movieListRepository: MovieListRepository) :
         } else {
             movieList.value = initialMoviesList
         }
+        isSearching = boolean
     }
 }
 

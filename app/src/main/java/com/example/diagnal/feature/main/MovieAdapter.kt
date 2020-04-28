@@ -11,7 +11,10 @@ import com.example.diagnal.R
 import com.example.diagnal.data.movie.Movie
 import kotlinx.android.synthetic.main.item_title.view.*
 
-class MovieAdapter(private val mContext: Context, private val movieList: List<Movie>) : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
+class MovieAdapter(private val mContext: Context) : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
+    private val movieList:MutableList<Movie> = mutableListOf()
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieAdapter.ViewHolder {
         val itemView = LayoutInflater.from(mContext).inflate(R.layout.item_title, parent, false)
         return ViewHolder(itemView)
@@ -22,7 +25,17 @@ class MovieAdapter(private val mContext: Context, private val movieList: List<Mo
     }
 
     override fun onBindViewHolder(holder: MovieAdapter.ViewHolder, position: Int) {
-        holder.bind(movieList[position])
+        movieList.get(position).let { holder.bind(it) }
+    }
+
+    fun addMovies(list: List<Movie>){
+        movieList.addAll(list)
+        notifyDataSetChanged()
+    }
+
+    fun clear(){
+        movieList.clear()
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
