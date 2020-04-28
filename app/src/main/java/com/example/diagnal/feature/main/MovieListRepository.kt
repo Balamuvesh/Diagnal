@@ -10,10 +10,10 @@ import java.nio.charset.Charset
 
 class MovieListRepository(private val mContext: Context) {
 
-    fun getMovieList():MovieListResponseModel? {
+    fun getMovieList(pageNumber: Int):MovieListResponseModel? {
         val json: String?
         try {
-            val inputStream: InputStream = mContext.assets.open("CONTENTLISTINGPAGE-PAGE1.json")
+            val inputStream: InputStream = mContext.assets.open("CONTENTLISTINGPAGE-PAGE$pageNumber.json")
             val size: Int = inputStream.available()
             val buffer = ByteArray(size)
             val gson = Gson()
