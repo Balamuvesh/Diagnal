@@ -1,15 +1,15 @@
 package com.example.diagnal.feature.main
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -21,6 +21,7 @@ import com.example.diagnal.common.ui.ViewState
 import com.example.diagnal.data.movie.Movie
 import com.example.diagnal.data.movie.MovieListResponseModel
 import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.android.synthetic.main.item_title.*
 
 
 class MainFragment : Fragment() {
@@ -64,8 +65,31 @@ class MainFragment : Fragment() {
         movieListViewModel.movieListResponseModel.observe(
             viewLifecycleOwner,
             Observer<MovieListResponseModel> { movieListResponseModel ->
-                populateView(movieListResponseModel.page.contentItems.movieList)
+                appbar_title.text = movieListResponseModel.page.pageTitle
+                populateList(movieListResponseModel.page.contentItems.movieList)
             })
+
+        search_view.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                if(!s.isNullOrEmpty() && s.length >= 3){
+                    movieListViewModel.searchMovieList(s.toString())
+                }
+                Log.d("MainFragmentAfter", " s= $s")
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                Log.d("MainFragmentBefore", " s= $s   start = $start  count = $count  after = $after")
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                Log.d("MainFragmentonChanged", " s= $s   start = $start  count = $count  before = $before")
+                if(count == 2 && before > count){
+                    var a =2
+                    movieListViewModel.searchMovieList(null)
+                }
+            }
+
+        })
 
         setupViews()
 
@@ -73,10 +97,15 @@ class MainFragment : Fragment() {
     }
 
     private fun setupViews() {
+
+        rv_movie_list.addItemDecoration(MarginItemDecoration(20))
+
+
         img_search.setOnClickListener {
             img_search.visibility = View.GONE
             appbar_title.visibility = View.GONE
             search_view.visibility = View.VISIBLE
+            movieListViewModel.setIsSearching(true)
             search_view.requestFocus()
             if(search_view.requestFocus()) {
                 search_view.showKeyboard()
@@ -99,6 +128,7 @@ class MainFragment : Fragment() {
                     img_search.visibility = View.VISIBLE
                     appbar_title.visibility = View.VISIBLE
                     search_view.visibility = View.GONE
+                    movieListViewModel.setIsSearching(false)
                     search_view.hideKeyboard()
                     return@OnTouchListener true
                 }
@@ -107,11 +137,11 @@ class MainFragment : Fragment() {
         })
     }
 
-    private fun populateView(movieList: List<Movie>) {
+    private fun populateList(movieList: List<Movie>) {
         val gridLayoutManager = GridLayoutManager(mContext, 3, GridLayoutManager.VERTICAL, false)
         rv_movie_list.layoutManager = gridLayoutManager
         val listAdapter = MovieAdapter(mContext, movieList)
+        listAdapter
         rv_movie_list.adapter = listAdapter
-        rv_movie_list.addItemDecoration(MarginItemDecoration(20))
     }
 }

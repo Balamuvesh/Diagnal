@@ -16,7 +16,7 @@ data class PageModel(
 )
 
 data class ContentItems (
-    @SerializedName("content") val movieList:List<Movie>
+    @SerializedName("content") var movieList:List<Movie>
 )
 
 data class Movie(
