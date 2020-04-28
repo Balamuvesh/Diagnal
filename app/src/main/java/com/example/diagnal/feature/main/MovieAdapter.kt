@@ -26,14 +26,16 @@ class MovieAdapter(private val mContext: Context, private val movieList: List<Mo
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
         fun bind(movie: Movie) {
             itemView.tv_title_name.text = movie.name
             Glide.with(mContext)
                 .load(getImage(movie.poster_image))
                 .fitCenter()
-                .placeholder(getImage("poster9"))
+                .placeholder(R.drawable.placeholder_for_missing_posters)
                 .into(itemView.img_title_poster)
         }
+
 
         private fun getImage(imageName: String?): Int {
             imageName?.substringBefore('.').let {

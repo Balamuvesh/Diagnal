@@ -83,7 +83,6 @@ class MainFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 Log.d("MainFragmentonChanged", " s= $s   start = $start  count = $count  before = $before")
                 if(count == 2 && before > count){
-                    var a =2
                     movieListViewModel.searchMovieList(null)
                 }
             }
@@ -140,7 +139,6 @@ class MainFragment : Fragment() {
         val gridLayoutManager = GridLayoutManager(mContext, 3, GridLayoutManager.VERTICAL, false)
         rv_movie_list.layoutManager = gridLayoutManager
         val listAdapter = MovieAdapter(mContext, movieList)
-        listAdapter
         rv_movie_list.adapter = listAdapter
     }
 }
