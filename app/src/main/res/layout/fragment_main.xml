@@ -9,16 +9,16 @@
     <FrameLayout
         android:id="@+id/progress_circular"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:elevation="100dp"
+        android:layout_height="@dimen/match_constraint"
+        android:elevation="@dimen/elevation"
         android:background="@color/app_background"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/app_bar"
         app:layout_constraintBottom_toBottomOf="parent">
         <ProgressBar
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="@dimen/circularprogressbar_diameter"
+            android:layout_height="@dimen/circularprogressbar_diameter"
             android:layout_gravity="center"
             style="@style/Widget.AppCompat.ProgressBar"/>
     </FrameLayout>
@@ -27,8 +27,8 @@
         android:id="@+id/empty_list_placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:elevation="100dp"
-        android:padding="20dp"
+        android:elevation="@dimen/elevation"
+        android:padding="@dimen/margin_xmedium"
         android:background="@color/app_background"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:text="@string/oops_we_haven_t_got_that"
             style="@style/BoldTextAppearance"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_size_xxxmedium"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
         <TextView
@@ -50,14 +50,14 @@
             style="@style/TitleTextAppearance"
             app:layout_constraintTop_toBottomOf="@id/tv_oops"
             app:layout_constraintStart_toStartOf="parent"
-            android:textSize="16sp"/>
+            android:textSize="@dimen/margin_xmedium"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:paddingHorizontal="12dp"
+        android:paddingHorizontal="@dimen/margin_xxxsmall"
         android:elevation="100dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -77,7 +77,7 @@
             style="@style/TitleTextAppearance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="@dimen/margin_xxxsmall"
             android:fontFamily="@font/titillium_web_regular"
             android:text="@string/romantic_comedy"
             android:textColor="@color/white"
@@ -98,14 +98,14 @@
 
         <EditText
             android:id="@+id/search_view"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/match_constraint"
             android:layout_height="match_parent"
             android:drawableEnd="@drawable/ic_search_cancel"
             app:layout_constraintStart_toEndOf="@id/img_back"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="@dimen/margin_xxxsmall"
             android:hint="@string/search"
             style="@style/TitleTextAppearance"
-            android:textSize="18sp"
+            android:textSize="@dimen/text_size_xxmedium"
             android:inputType="textCapWords"
             android:visibility="gone"
             android:importantForAutofill="no"
@@ -120,8 +120,8 @@
         android:id="@+id/rv_movie_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="10dp"
-        android:paddingBottom="70dp"
+        android:paddingHorizontal="@dimen/margin_xxsmall"
+        android:paddingBottom="@dimen/margin_xxlarge"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -129,6 +129,6 @@
         app:layout_constraintTop_toBottomOf="@+id/app_bar"
         app:spanCount="3"
         tools:itemCount="20"
-        tools:listitem="@layout/item_title" />
+        tools:listitem="@layout/item_movie" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

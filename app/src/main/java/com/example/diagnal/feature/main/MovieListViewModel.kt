@@ -7,17 +7,21 @@ import com.example.diagnal.common.ui.ViewState
 import com.example.diagnal.data.movie.Movie
 import com.example.diagnal.data.movie.MovieListResponseModel
 
+
 class MovieListViewModel(private val movieListRepository: MovieListRepository) : ViewModel() {
     val viewState = MutableLiveData<ViewState>()
     lateinit var movieListResponseModel: MovieListResponseModel
     val movieList = MutableLiveData<MutableList<Movie>>()
-    private var initialMoviesList: MutableList<Movie> = mutableListOf()
+    private var preSearchMoviesList: MutableList<Movie> = mutableListOf()
 
-    //Set this parameter to true to start searching
+    //Set this flag to true while search feature is being used
     var isSearching: Boolean = false
 
 
-    fun getMoviesList() {
+    /**
+     * This function is used to load the initial list of movies from the repository
+     */
+    fun getInitialMoviesList() {
         viewState.value = ViewState.LOADING
         movieListRepository.getMovieList(1)?.apply {
             movieListResponseModel = this
@@ -26,6 +30,9 @@ class MovieListViewModel(private val movieListRepository: MovieListRepository) :
         viewState.value = ViewState.LOADED
     }
 
+    /**
+     * This function is used to retrieve a specific page from the repository
+     */
     fun getMovieListPage(pageNumber: Int){
        movieListRepository.getMovieList(pageNumber).let {
            it?.page?.contentItems?.movieList?.let { it1 -> movieList.value?.addAll(it1) }
@@ -33,31 +40,43 @@ class MovieListViewModel(private val movieListRepository: MovieListRepository) :
         movieList.value = movieList.value
     }
 
+    /**
+     * This function is used to search through the movies list.
+     * The retrieved data is updated to the [MutableLiveData] object [movieList]
+     */
     fun searchMovieList(query: String?) {
         //if query is  null, reset list to initial value
         if (query == null) {
-            movieList.value = initialMoviesList
+            movieList.value = preSearchMoviesList
         }else {
-            movieList.value = initialMoviesList.filter {
+            movieList.value = preSearchMoviesList.filter {
                 it.name.contains(query, ignoreCase = true)
             } as MutableList<Movie>
         }
         movieList.value = movieList.value
     }
 
+    /**
+     * Convenience function to set value of [isSearching] flag.
+     * if [boolean] is true, it saves a copy of the list of movies from [movieList],
+     * when false, the the list is restored
+     */
     fun setIsSearching(boolean: Boolean) {
         if (boolean) {
             if (!isSearching)
                 movieList.value?.let {
-                    initialMoviesList = it
+                    preSearchMoviesList = it
                 }
         } else {
-            movieList.value = initialMoviesList
+            movieList.value = preSearchMoviesList
         }
         isSearching = boolean
     }
 }
 
+/**
+ * Factory class to provide an instance of [MovieListViewModel]
+ */
 @Suppress("UNCHECKED_CAST")
 class MovieListViewModelFactory(private val movieListRepository: MovieListRepository) :
     ViewModelProvider.NewInstanceFactory() {

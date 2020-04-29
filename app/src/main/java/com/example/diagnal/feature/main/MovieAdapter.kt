@@ -5,18 +5,23 @@ import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.diagnal.R
 import com.example.diagnal.data.movie.Movie
-import kotlinx.android.synthetic.main.item_title.view.*
+import com.example.diagnal.databinding.ItemMovieBinding
 
+
+/**
+ * RecyclerView Adapter class that provides [MovieAdapter.ViewHolder] viewholders.
+ *
+ */
 class MovieAdapter(private val mContext: Context) : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
     private val movieList:MutableList<Movie> = mutableListOf()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieAdapter.ViewHolder {
-        val itemView = LayoutInflater.from(mContext).inflate(R.layout.item_title, parent, false)
+        val itemView: ItemMovieBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_movie,  parent, false)
         return ViewHolder(itemView)
     }
 
@@ -25,36 +30,32 @@ class MovieAdapter(private val mContext: Context) : RecyclerView.Adapter<MovieAd
     }
 
     override fun onBindViewHolder(holder: MovieAdapter.ViewHolder, position: Int) {
-        movieList.get(position).let { holder.bind(it) }
+        holder.itemBinding.movie = movieList[position]
     }
 
+    /**
+     * Function to add new list of movies to the adapter.
+     * This function will trigger a rebuild of the recyclerview
+     */
     fun addMovies(list: List<Movie>){
         movieList.addAll(list)
         notifyDataSetChanged()
     }
 
+    /**
+     * Function to add clear current list of movies in the adapter.
+     * This function will trigger a rebuild of the recyclerview
+     */
     fun clear(){
         movieList.clear()
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        fun bind(movie: Movie) {
-            itemView.tv_title_name.text = movie.name
-            Glide.with(mContext)
-                .load(getImage(movie.poster_image))
-                .fitCenter()
-                .placeholder(R.drawable.placeholder_for_missing_posters)
-                .into(itemView.img_title_poster)
-        }
-
-
-        private fun getImage(imageName: String?): Int {
-            imageName?.substringBefore('.').let {
-                return mContext.resources.getIdentifier(it, "drawable", mContext.packageName)
-            }
-        }
+    /**
+     * ViewHolder class that is provided by this adapter
+     */
+    inner class ViewHolder(private val itemMovieBinding: ItemMovieBinding) : RecyclerView.ViewHolder(itemMovieBinding.root) {
+        val itemBinding: ItemMovieBinding = itemMovieBinding
     }
 }
 

@@ -7,4 +7,6 @@
     <string name="search_button">Search Button</string>
     <string name="oops_we_haven_t_got_that">Oops. We haven\'t got that</string>
     <string name="try_searching_for_other_movies_and_tv_shows">Try searching for other movies and tv shows</string>
+
+    <string name="json_file_with_page_number">CONTENTLISTINGPAGE-PAGE%1$i.json</string>
 </resources>

@@ -2,14 +2,24 @@ package com.example.diagnal.feature.main
 
 import android.content.Context
 import android.util.Log
+import com.example.diagnal.R
 import com.example.diagnal.data.movie.MovieListResponseModel
 import com.google.gson.Gson
 import java.io.IOException
 import java.io.InputStream
 import java.nio.charset.Charset
 
+/**
+ * [MovieListRepository] is used to implement Repository pattern.
+ * Acts as single source of truth for objects that subscribe to it.
+ * Handles all interaction with the API
+ */
+
 class MovieListRepository(private val mContext: Context) {
 
+    /**
+     * Function retrieves list of movies from the API.
+     */
     fun getMovieList(pageNumber: Int):MovieListResponseModel? {
         val json: String?
         try {

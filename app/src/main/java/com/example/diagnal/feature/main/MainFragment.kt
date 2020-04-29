@@ -25,26 +25,28 @@ import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainFragment : Fragment() {
     private lateinit var mContext: Context
-
     private lateinit var listAdapter: MovieAdapter
 
-
     private var currentPage: Int = 1
+
+    //TOTAL_PAGES is not a necessary when dealing with real world APIs
     private val TOTAL_PAGES = 3
+
+    private val movieListRepository by lazy {
+        MovieListRepository(mContext)
+    }
+
+
+    private val movieListViewModel by lazy {
+        ViewModelProvider(this, MovieListViewModelFactory(movieListRepository)).get(
+            MovieListViewModel::class.java
+        )
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
         listAdapter = MovieAdapter(mContext)
-    }
-
-    private val movieListRepository by lazy {
-        MovieListRepository(mContext)
-    }
-    private val movieListViewModel by lazy {
-        ViewModelProvider(this, MovieListViewModelFactory(movieListRepository)).get(
-            MovieListViewModel::class.java
-        )
     }
 
     override fun onCreateView(
@@ -59,6 +61,18 @@ class MainFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        setupRecyclerView()
+        setupListeners()
+        setupObservers()
+
+        movieListViewModel.getInitialMoviesList()
+    }
+
+    /**
+     * This function is used to setup different observers on to this fragment's ViewModel [MovieListViewModel]
+     * and it's LiveData objects
+     */
+    private fun setupObservers() {
         movieListViewModel.viewState.observe(
             viewLifecycleOwner,
             Observer { viewState ->
@@ -72,32 +86,38 @@ class MainFragment : Fragment() {
         movieListViewModel.movieList.observe(
             viewLifecycleOwner,
             Observer<List<Movie>> { movieList ->
-                if(movieList.isEmpty()){
+                if (movieList.isEmpty()) {
                     empty_list_placeholder.visibility = View.VISIBLE
                     rv_movie_list.visibility = View.GONE
-                }else {
+                } else {
                     empty_list_placeholder.visibility = View.GONE
                     rv_movie_list.visibility = View.VISIBLE
                 }
-                if(movieListViewModel.isSearching)
+                if (movieListViewModel.isSearching)
                     listAdapter.clear()
 
                 listAdapter.addMovies(movieList)
             })
-        setupViews()
-
-        movieListViewModel.getMoviesList()
     }
 
-    private fun setupViews() {
+    /**
+     * This function sets up the [RecyclerView] with it's layoutManager, adapter and other properties
+     */
+    private fun setupRecyclerView() {
+
         val columns = resources.getInteger(R.integer.rv_movies_span)
-        rv_movie_list.addItemDecoration(MarginItemDecoration(columns, 20))
         val gridLayoutManager =
             GridLayoutManager(mContext, columns, GridLayoutManager.VERTICAL, false)
+        rv_movie_list.addItemDecoration(MarginItemDecoration(columns, 20))
         rv_movie_list.layoutManager = gridLayoutManager
         rv_movie_list.adapter = listAdapter
+    }
 
-
+    /**
+     * This function is used to set up  the various listeners to different [View] objects in the expanded
+     * layout
+     */
+    private fun setupListeners() {
 
         img_search.setOnClickListener {
             img_search.visibility = View.GONE
@@ -144,8 +164,8 @@ class MainFragment : Fragment() {
         search_view.setOnTouchListener(OnTouchListener { v, event ->
 //            val DRAWABLE_LEFT = 0
 //            val DRAWABLE_TOP = 1
-            val DRAWABLE_RIGHT = 2
 //            val DRAWABLE_BOTTOM = 3
+            val DRAWABLE_RIGHT = 2
             if (event.action == MotionEvent.ACTION_UP) {
                 if (event.rawX >= search_view.right - search_view.compoundDrawables[DRAWABLE_RIGHT].bounds.width()
                 ) {
@@ -167,9 +187,9 @@ class MainFragment : Fragment() {
                 if (dy > 0) {
 
                     val layoutManager = rv_movie_list.layoutManager as GridLayoutManager
-                    val visibleItemCount = layoutManager.findLastCompletelyVisibleItemPosition()+1
-                    if (visibleItemCount == layoutManager.itemCount){
-                        if(currentPage < TOTAL_PAGES ) {
+                    val visibleItemCount = layoutManager.findLastCompletelyVisibleItemPosition() + 1
+                    if (visibleItemCount == layoutManager.itemCount) {
+                        if (currentPage < TOTAL_PAGES) {
                             currentPage++
                             loadNextPage()
                         }
@@ -181,6 +201,9 @@ class MainFragment : Fragment() {
         })
     }
 
+    /**
+     * This function is used to the load the next page of Movie listings. Used for pagination.
+     */
     private fun loadNextPage() {
         movieListViewModel.getMovieListPage(currentPage)
     }
