@@ -119,6 +119,10 @@ class MainFragment : Fragment() {
      */
     private fun setupListeners() {
 
+        img_back.setOnClickListener {
+            activity?.onBackPressed()
+        }
+
         img_search.setOnClickListener {
             img_search.visibility = View.GONE
             appbar_title.visibility = View.GONE
