@@ -23,7 +23,7 @@ class MovieListRepository(private val mContext: Context) {
     fun getMovieList(pageNumber: Int):MovieListResponseModel? {
         val json: String?
         try {
-            val inputStream: InputStream = mContext.assets.open("CONTENTLISTINGPAGE-PAGE$pageNumber.json")
+            val inputStream: InputStream = mContext.assets.open(mContext.resources.getString(R.string.json_file_with_page_number, pageNumber))
             val size: Int = inputStream.available()
             val buffer = ByteArray(size)
             val gson = Gson()
